@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#121417">
+  <meta name="description" content="An offline Hitman Freelancer showdown suspect finder, based on Riximilian’s identification cheatsheet.">
+  <title>Showdown — Freelancer Suspect Finder</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="suspects.js"></script>
+  <script defer src="filter.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#results">Skip to suspects</a>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Showdown home">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 11V4h7M21 4h7v7M28 21v7h-7M11 28H4v-7M16 8v16M8 16h16"/></svg>
+      <span>SHOWDOWN<span class="brand-sub">HITMAN FREELANCER</span></span>
+    </a>
+    <div class="top-actions"><span class="offline"><i></i> OFFLINE READY</span><button class="button subtle" id="about-button">Field guide</button><button class="button" id="new-showdown">New showdown <span aria-hidden="true">↗</span></button></div>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <div><p class="eyebrow"><span></span> YOUR NEXT MOVE STARTS HERE</p><h1 id="page-title">Find the face.<br><span>Close the case.</span></h1><p class="intro-copy">Enter the leader’s looks. Narrow the possibilities.<br>Confirm their tells in the field.</p></div>
+      <div class="brief-stat"><span class="stat-label">SUSPECT ARCHIVE</span><strong>72<span> / PROFILES</span></strong><p>Every hair type. Every look combination.</p><span class="stat-line"></span></div>
+    </section>
+
+    <div class="workspace">
+      <aside class="filter-panel" aria-label="Suspect filters">
+        <div class="panel-heading"><h2>Leader profile</h2><button class="text-button" id="clear-filters">Clear traits</button></div>
+        <div class="filter-section">
+          <div class="section-heading"><span class="step">01</span><h3>Hair type</h3></div>
+          <div class="hair-options" id="hair-options" role="group" aria-label="Hair type"></div>
+        </div>
+        <div class="filter-section">
+          <div class="section-heading"><span class="step">02</span><h3>Looks</h3></div>
+          <p class="filter-help">Set briefing traits to <b>Yes</b>. Leave unlisted traits on <b>Any</b>.</p>
+          <div id="trait-options"></div>
+          <p class="absence-note"><span aria-hidden="true">ⓘ</span> Use <b>No</b> only when you’ve confirmed a trait is absent in the field.</p>
+        </div>
+        <div class="profile-summary"><span class="eyebrow">CURRENT INTEL</span><p id="profile-summary">No traits entered yet.</p><span class="save-status" id="save-status">Progress saved on this Mac</span></div>
+      </aside>
+
+      <section class="results" id="results" aria-labelledby="results-title" tabindex="-1">
+        <div class="results-heading"><div><p class="eyebrow">IDENTIFICATION BOARD</p><h2 id="results-title"><span id="match-count">72</span> possible suspects</h2></div><span class="pool-count" id="pool-count">72 / 72</span></div>
+        <p class="results-description" id="results-description">Start with hair type, then add the looks from your briefing.</p>
+        <div class="board-tools"><span id="filter-description">Showing the full archive</span><label class="show-excluded"><input type="checkbox" id="show-excluded"> Show ruled out <span id="excluded-count">(0)</span></label></div>
+        <div id="announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+        <div class="undo-bar" id="undo-bar" hidden><span id="undo-message"></span><button class="text-button" id="undo-button">Undo</button></div>
+        <div class="suspect-grid" id="suspect-grid"></div>
+        <div class="empty-state" id="empty-state" hidden><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="21" cy="21" r="13"/><path d="m31 31 11 11M15 21h12"/></svg><h3 id="empty-title">No profiles match this intel.</h3><p id="empty-description">Try clearing a trait. An unlisted briefing trait should be left on Any.</p><button class="button" id="empty-reset">Clear traits</button></div>
+        <div class="field-note"><span class="note-cross" aria-hidden="true">+</span><p><b>A match is a lead.</b> Suspects can have extra looks beyond the briefing. Use their tells and meeting agenda to confirm the leader.</p></div>
+      </section>
+    </div>
+  </main>
+  <footer><span>SHOWDOWN <span class="footer-divider">/</span> A FREELANCER FIELD COMPANION</span><span>Research & portraits by <a href="https://www.reddit.com/r/HiTMAN/comments/1arlwol/freelancer_showdown_leader_identification_cheat/" target="_blank" rel="noreferrer">Riximilian ↗</a><span class="footer-divider">·</span><button class="text-button" id="credits-button">Credits & how it works</button></span></footer>
+
+  <dialog id="portrait-dialog" class="portrait-dialog" aria-labelledby="portrait-name"><button class="dialog-close" data-close aria-label="Close portrait">×</button><img id="portrait-image" alt=""><div class="portrait-info"><p class="eyebrow">SUSPECT PROFILE</p><h2 id="portrait-name"></h2><p id="portrait-hair"></p><div class="trait-chips" id="portrait-traits"></div><p class="reference-note">Names are portrait reference labels, not mission suspect names.</p><button class="button primary" id="portrait-rule-out">Rule out suspect</button></div></dialog>
+
+  <dialog id="about-dialog" class="about-dialog" aria-labelledby="about-title"><button class="dialog-close" data-close aria-label="Close field guide">×</button><p class="eyebrow">THE FIELD GUIDE</p><h2 id="about-title">Good intel. Better odds.</h2><ol><li><b>Copy the briefing.</b> Pick a hair type and set each listed look to Yes. Leave everything else on Any.</li><li><b>Compare the faces.</b> Open a portrait for a closer look. Extra looks are allowed: the briefing may describe only three of a suspect’s four traits.</li><li><b>Work the field.</b> Use No only for confirmed absent traits. Rule out a portrait when you’ve eliminated that suspect. Undo or show ruled-out profiles to restore them.</li><li><b>Confirm the leader.</b> Tells and meeting agendas vary by mission; they aren’t determined by the portraits.</li></ol><div class="guide-note">Your filters and ruled-out profiles save in this browser when local storage is available. New showdown clears the board. Everything works offline; no account or server is needed.</div><h3>About this archive</h3><p>Based on <a href="https://www.reddit.com/r/HiTMAN/comments/1arlwol/freelancer_showdown_leader_identification_cheat/" target="_blank" rel="noreferrer">Riximilian’s cheatsheet</a>. The 72 portraits, reference labels, and trait records are sourced from <a href="https://github.com/flamewing/hitman-freelancer-leaders" target="_blank" rel="noreferrer">flamewing’s community leader finder</a> (Apache 2.0; bundled license). This app adds a new interface, absence filters, saved progress, and elimination tracking.</p><p>Reference names aren’t the randomized names shown in a mission. The data follows the cheatsheet, including its treatment of glasses resting on Bald Male 2’s hat as Hat only. This is a community reference, not live game data.</p><p class="reference-note">Unofficial fan tool. HITMAN and game imagery belong to their respective owners. See CREDITS.md and THIRD-PARTY-LICENSE.txt for attribution.</p></dialog>
+  <noscript>This suspect finder needs JavaScript enabled in your browser.</noscript>
+</body>
+</html>
